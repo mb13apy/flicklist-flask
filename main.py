@@ -1,98 +1,39 @@
-from flask import Flask, request
+import random
+
+from flask import Flask
 
 app = Flask(__name__)
 
 app.config['DEBUG'] = True      # displays runtime errors in the browser, too
 
-page_header = """
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>FlickList</title>
-    </head>
-    <body>
-        <h1>FlickList</h1>
-"""
-
-page_footer = """
-    </body>
-</html>
-"""
-
-# a form for adding new movies
-add_form = """
-    <form action="/add" method="post">
-        <label for="new-movie">
-            I want to add
-            <input type="text" id="new-movie" name="new-movie"/>
-            to my watchlist.
-        </label>
-        <input type="submit" value="Add It"/>
-    </form>
-"""
-
-# TODO:
-# Create the HTML for the form below so the user can check off a movie from their list 
-# when they've watched it.
-# Name the action for the form '/crossoff' and make its method 'post'.
-
-# a form for crossing off watched movies
-crossoff_form = """
-    <form action="/crossoff" method="post">
-        <label for="watched-movie">
-            I want to cross off
-            <select name="movies">
-                <option value="movie1">The Green Mile</option>
-                <option value="movie2">13 Hours</option>
-                <option value="movie3">The Shawshank Redemption</option>
-                <option value="movie4">Snakes on a Plane</option>
-                <option value="movie5">Good Will Hunting</option>
-            </select>
-            from my watchlist.
-        </label>
-        <input type="submit" value="Cross It Off"/>
-    </form>
-"""
-
-# TODO:
-# Finish filling in the function below so that the user will see a message like:
-# "Star Wars has been crossed off your watchlist".
-# And create a route above the function definition to receive and handle the request from 
-# your crossoff_form.
-@app.route("/crossoff", methods=['POST'])
-def crossoff_movie():
-    crossed_off_movie = request.form['watched-movie']    
-
-    crossed_off_movie_element = "<strike>" + crossed_off_movie + "</strike>"
-    sentence = crossed_off_movie_element + " has been crossed off your Watchlist!"
-    content = page_header + "<p>" + sentence + "</p>" + page_footer
-
-    return content
-
-# TODO:
-# modify the crossoff_form above to use a dropdown (<select>) instead of
-# an input text field (<input type="text"/>)
-
-@app.route("/add", methods=['POST'])
-def add_movie():
-    new_movie = request.form['new-movie']
-
-    # build response content
-    new_movie_element = "<strong>" + new_movie + "</strong>"
-    sentence = new_movie_element + " has been added to your Watchlist!"
-    content = page_header + "<p>" + sentence + "</p>" + page_footer
-
-    return content
-
-
 @app.route("/")
 def index():
-    edit_header = "<h2>Edit My Watchlist</h2>"
+    # choose a movie by invoking our new function
+    movie = get_random_movie()
+    movie_2 = get_random_movie()
 
     # build the response string
-    content = page_header + edit_header + add_form + crossoff_form + page_footer
+    content = "<h1>Movie of the Day</h1>"
+    content += "<ul>"
+    content += "<li>" + movie + "</li>"
+    content += "</ul>"
+    
+    # TODO: pick another random movie, and display it under
+    # the heading "<h1>Tommorrow's Movie</h1>"
+    content += "<h1>Tomorrow's Movie</h1>"
+    content += "<ul>"
+    content += "<li>" + movie_2 + "</li>"
+    content += "</ul>"
 
     return content
+
+def get_random_movie():
+    # TODO: make a list with at least 5 movie titles
+    movie_choices = ["Hocus Pocus", "It's the Great Pumpkin, Charlie Brown", "The Nightmare Before Christmas", "Scream", "The Adams Family"]
+    # TODO: randomly choose one of the movies, and return it
+    featured_movie = movie_choices[random.randrange(len(movie_choices))]
+
+    return  featured_movie
 
 
 app.run()
