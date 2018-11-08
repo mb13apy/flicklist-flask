@@ -104,16 +104,16 @@ def add_movie():
     sentence = new_movie_element + " has been added to your Watchlist!"
     content = page_header + "<p>" + sentence + "</p>" + page_footer
 
-    if (not new_movie):
+    if not new_movie:
         error = "You must specify the movie you wish to add."
         return redirect("/?error=" + error)
 
-    if (terrible_movies):
+    elif new_movie in terrible_movies:
         sucks = "Trust me, that movie sucks! You do not want to add it!"
-        return redirect("/?sucks=" + sucks)
+        return redirect("/?error=" + sucks)
 
-    return content
-
+    else:
+        return content
 
 @app.route("/")
 def index():
